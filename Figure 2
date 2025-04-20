@@ -1,0 +1,52 @@
+% SPW/R overlap illustration
+
+fs = 1000; % Sampling frequency
+t = 0:1/fs:1; % 1 second duration
+
+% Ripple oscillation parameters
+rippleFreq = 150; % Ripple frequency ~150 Hz
+
+% Generate sharp-wave shaped envelopes for distinct events
+sharpWave1 = exp(-((t - 0.25)/0.015).^2);
+sharpWave2 = exp(-((t - 0.65)/0.015).^2);
+
+% Multiply by ripple to create two distinct ripple events
+ripple = sin(2 * pi * rippleFreq * t);
+event1 = sharpWave1 .* ripple;
+event2 = sharpWave2 .* ripple;
+cleanRipples = event1 + event2;
+
+% Generate clustered ripple events for the "overlap" illusion
+sharpWaveCluster1 = exp(-((t - 0.38)/0.015).^2);
+sharpWaveCluster2 = exp(-((t - 0.42)/0.015).^2);
+sharpWaveCluster3 = exp(-((t - 0.46)/0.015).^2);
+
+cluster1 = sharpWaveCluster1 .* ripple;
+cluster2 = sharpWaveCluster2 .* ripple;
+cluster3 = sharpWaveCluster3 .* ripple;
+clusteredRipples = cluster1 + cluster2 + cluster3;
+
+% Define Hexadecimal Colors (converted to RGB)
+RGB1 = '#7E2F8E';  
+RGB2 = '#77AC30'; 
+
+RGB1 = sscanf(RGB1(2:end),'%2x%2x%2x',[1 3])/255;
+RGB2 = sscanf(RGB2(2:end),'%2x%2x%2x',[1 3])/255;
+
+% Plot
+figure;
+
+subplot(2,1,1);
+plot(t, cleanRipples, 'Color', RGB1, 'LineWidth', 1.5);
+title('Two Distinct Ripple Events');
+ylabel('Amplitude');
+ylim([-1.5 1.5]);
+text(-0.05, 1.4, 'A', 'FontSize', 14, 'FontWeight', 'bold', 'HorizontalAlignment', 'center');
+
+subplot(2,1,2);
+plot(t, clusteredRipples, 'Color', RGB2, 'LineWidth', 1.5);
+title('Clustered Ripple Events Mimicking Slow Gamma');
+xlabel('Time (s)');
+ylabel('Amplitude');
+ylim([-1.5 1.5]);
+text(-0.05, 1.4, 'B', 'FontSize', 14, 'FontWeight', 'bold', 'HorizontalAlignment', 'center');
